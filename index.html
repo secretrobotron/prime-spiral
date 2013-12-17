@@ -47,7 +47,6 @@
   <script>
     (function () {
       var origin = document.querySelector('#origin');
-      var block;
 
       var ring = 0;
       var lineLength = 1;
@@ -60,7 +59,7 @@
       var bi = 0;
 
       function placeBlock (n, x, y, prime) {
-        block = document.createElement('div');
+        var block = document.createElement('div');
         block.classList.add('block');
         block.innerHTML = n;
         origin.appendChild(block);
@@ -88,39 +87,38 @@
       var next = false;
 
       function step () {
-        setTimeout(function () {
-          if (index < 2000) {
+        if (next) {
+          dx = Math.round(-Math.sin(side * Math.PI / 2));
+          dy = Math.round(Math.cos(side * Math.PI / 2));
+          next = false;
+        }
 
-            if (next) {
-              dx = Math.round(-Math.sin(side * Math.PI / 2));
-              dy = Math.round(Math.cos(side * Math.PI / 2));
-              next = false;
-            }
+        placeBlock(index++, bx, by, isPrime(index));
 
-            placeBlock(index++, bx, by, isPrime(index));
-
-            if (lineLength === 0) {
-              if (side < 3) {
-                ++side;
-                dx = Math.round(-Math.sin(side * Math.PI / 2));
-                dy = Math.round(Math.cos(side * Math.PI / 2));
-              }
-              else {
-                side = 0;
-                ++ring;
-                next = true;
-              }
-              lineLength = 2 * ring;
-            }
-
-            --lineLength;
-
-            bx += dx;
-            by += dy;
-            step();
+        if (lineLength === 0) {
+          if (side < 3) {
+            ++side;
+            dx = Math.round(-Math.sin(side * Math.PI / 2));
+            dy = Math.round(Math.cos(side * Math.PI / 2));
           }
+          else {
+            side = 0;
+            ++ring;
+            next = true;
+          }
+          lineLength = 2 * ring;
+        }
 
-        }, 20);
+        --lineLength;
+
+        bx += dx;
+        by += dy;
+
+        if (index < 2000) {
+          setTimeout(function () {
+            step();
+          }, 10);
+        }
       }
 
       ring = 1;
