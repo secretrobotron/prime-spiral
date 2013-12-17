@@ -46,6 +46,8 @@
   </body>
   <script>
     (function () {
+      var MAX = 3000;
+
       var origin = document.querySelector('#origin');
 
       var ring = 0;
@@ -120,10 +122,10 @@
         bx += dx;
         by += dy;
 
-        if (index < 2000) {
+        if (index < MAX) {
           setTimeout(function () {
             step();
-          }, 10);
+          }, 1);
         }
       }
 
