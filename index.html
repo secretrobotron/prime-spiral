@@ -74,10 +74,14 @@
       }
 
       function isPrime (n) {
+        if (n > 0 && n < 3) {
+          return true;
+        }
+
         var r = 0;
         for (var i = 2; i < n; ++i) {
           r = n/i;
-          if (Math.round(n/i) === r) {
+          if (Math.round(r) === r) {
             return false;
           }
         }
@@ -93,7 +97,9 @@
           next = false;
         }
 
-        placeBlock(index++, bx, by, isPrime(index));
+        ++index;
+
+        placeBlock(index, bx, by, isPrime(index));
 
         if (lineLength === 0) {
           if (side < 3) {
