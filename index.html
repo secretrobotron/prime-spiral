@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      html, body {
+        width: 100%; height: 100%; padding: 0; margin: 0;
+        background: #000;
+      }
+      #origin {
+        position: absolute; top: 50%; left: 50%;
+        /*background-color: #000; width: 1px; height: 1px;*/
+      }
+      .block {
+        position: absolute; width: 30px; height: 30px; margin-left: -10px; margin-top: -10px; font-size: 10px; line-height: 30px;
+        font-family: sans-serif;
+        text-align: center;
+        color: #888;
+        background-color: #000;
+        opacity: 0;
+        font-size: 10px;
+        border: 1px solid rgba(230, 230, 255, 0.3);
+        -webkit-transition: opacity 1.5s, -webkit-transform .25s, background-color .25s, border .25s, border-radius .25s, z-index .25s;
+           -moz-transition: opacity 1.5s,    -moz-transform .25s, background-color .25s, border .25s, border-radius .25s, z-index .25s;
+            -ms-transition: opacity 1.5s,     -ms-transform .25s, background-color .25s, border .25s, border-radius .25s, z-index .25s;
+             -o-transition: opacity 1.5s,      -o-transform .25s, background-color .25s, border .25s, border-radius .25s, z-index .25s;
+                transition: opacity 1.5s,         transform .25s, background-color .25s, border .25s, border-radius .25s, z-index .25s;
+        cursor: pointer;
+        z-index: 1;
+      }
+      .block.show {
+        opacity: 1;
+      }
+      .block.prime {
+        color: #fff;
+      }
+      .block:hover {
+        -webkit-transform: scale(2);
+           -moz-transform: scale(2);
+            -ms-transform: scale(2);
+             -o-transform: scale(2);
+                transform: scale(2);
+        background-color: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 30px;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="origin"></div>
+  </body>
+  <script>
+    (function () {
+      var origin = document.querySelector('#origin');
+      var block;
+
+      var ring = 0;
+      var lineLength = 1;
+      var index = 1;
+      var side = 0;
+      var bx = 0;
+      var by = 0;
+      var dx = 0;
+      var dy = 1;
+      var bi = 0;
+
+      function placeBlock (n, x, y, prime) {
+        block = document.createElement('div');
+        block.classList.add('block');
+        block.innerHTML = n;
+        origin.appendChild(block);
+        block.style.left = (x * 30) + 'px';
+        block.style.top = (y * 30) + 'px';
+        if (prime) {
+          block.classList.add('prime');
+        }
+        setTimeout(function () {
+          block.classList.add('show');
+        }, 10);
+      }
+
+      function isPrime (n) {
+        var r = 0;
+        for (var i = 2; i < n; ++i) {
+          r = n/i;
+          if (Math.round(n/i) === r) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      var next = false;
+
+      function step () {
+        setTimeout(function () {
+          if (index < 10000) {
+
+            if (next) {
+              dx = Math.round(-Math.sin(side * Math.PI / 2));
+              dy = Math.round(Math.cos(side * Math.PI / 2));
+              next = false;
+            }
+
+            placeBlock(index++, bx, by, isPrime(index));
+
+            if (lineLength === 0) {
+              if (side < 3) {
+                ++side;
+                dx = Math.round(-Math.sin(side * Math.PI / 2));
+                dy = Math.round(Math.cos(side * Math.PI / 2));
+              }
+              else {
+                side = 0;
+                ++ring;
+                next = true;
+              }
+              lineLength = 2 * ring;
+            }
+
+            --lineLength;
+
+            bx += dx;
+            by += dy;
+            step();
+          }
+
+        }, 10);
+      }
+
+      ring = 1;
+      side = 0;
+      dx = 0;
+      dy = 1;
+      lineLength = 2 * ring - 1;
+      placeBlock(index++, bx, by, isPrime(index));
+      bx = 1;
+      by = 0;
+      step();
+    })();
+  </script>
+</html>
